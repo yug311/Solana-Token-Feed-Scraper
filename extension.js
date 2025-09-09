@@ -3,8 +3,6 @@ window.addEventListener('load', () => {
   runFeedLogic();
 });
 
-
-
 function observeRouteChanges() {
   let currentPath = window.location.pathname; // Track the current path
 
@@ -61,43 +59,28 @@ function shouldHighlightTweet(apiData) {
 }
 
 function highlightTweet(node, twitterLink) {
-              const tweetId = twitterLink.href.split("/").pop();
+  const tweetId = twitterLink.href.split("/").pop();
+    
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", `https://api9.axiom.trade/tweet-by-tweet-id?tweetId=${tweetId}`, true);
+    xhr.withCredentials = true; // if the API requires cookies
 
-                // Here you would call Twitter API to get tweet data using tweetId
-                
-                const xhr = new XMLHttpRequest();
-                xhr.open("GET", `https://api9.axiom.trade/tweet-by-tweet-id?tweetId=${tweetId}`, true);
-                xhr.withCredentials = true; // if the API requires cookies
-
-                // optional: set headers if the site uses any
-                // xhr.setRequestHeader("Authorization", "Bearer YOUR_TOKEN_HERE");
-
-
-                xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) { // DONE
-                    if (xhr.status === 200) {
-                    const data = JSON.parse(xhr.responseText);
-                    if (shouldHighlightTweet(data)) {
-
-
-                      if (wasRecentlySeen(tweetId)) {
-                        node.style.border = "2px solid blue"; // Already seen in last 5 mins
-                      } else {
-                        node.style.border = "2px solid red"; // Highlight with red border
-                        rememberTweet(tweetId, new Date(data.createdAt).getTime());
-                    }
-
-
-
-
-
-
-                    }
-                    }
-                }
-                };
-
-                xhr.send();
+    xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) { // DONE
+        if (xhr.status === 200) {
+        const data = JSON.parse(xhr.responseText);
+          if (shouldHighlightTweet(data)) {
+            if (wasRecentlySeen(tweetId)) {
+              node.style.border = "2px solid blue"; // Already seen in last 5 mins
+            } else {
+              node.style.border = "2px solid red"; // Highlight with red border
+              rememberTweet(tweetId, new Date(data.createdAt).getTime());
+            }
+          }
+        }
+    }
+    };
+    xhr.send();
 }
 
 const recentTweets = new Map(); // tweetId -> timestamp in ms
@@ -125,48 +108,44 @@ function runFeedLogic() {
 
   waitForFeedContainer(feedContainer => {
   
+  if (!feedContainer) 
+  {
+    console.log("Feed container not found!");
+  } 
+  else
+  {
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === 1 && node.tagName === "DIV") {
+            // Poll for the tweet link inside this div
+            const intervalId = setInterval(() => {
+              const twitterLink = node.querySelector("a[href*='/status/']");
+              if (twitterLink) {
+                highlightTweet(node, twitterLink);
 
-if (!feedContainer) {
-  console.log("Feed container not found!");
-} else {
-
-  const observer = new MutationObserver(mutations => {
-    mutations.forEach(mutation => {
-      mutation.addedNodes.forEach(node => {
-        if (node.nodeType === 1 && node.tagName === "DIV") {
-          // Only react to top-level tweet divs
-          // console.log("Detected new tweet div:", node);
-
-          // Poll for the tweet link inside this div
-          const intervalId = setInterval(() => {
-            const twitterLink = node.querySelector("a[href*='/status/']");
-            if (twitterLink) {
-              highlightTweet(node, twitterLink);
-
-              clearInterval(intervalId); // stop polling
-            }
-          }, 50); // check every 50ms, very lightweight
-          
-          // Optional: stop polling after .5 seconds to avoid infinite loops
-          setTimeout(() => clearInterval(intervalId), 1000);
-        }
+                clearInterval(intervalId); // stop polling
+              }
+            }, 50); // check every 50ms, very lightweight
+            
+            setTimeout(() => clearInterval(intervalId), 1000);
+          }
+        });
       });
     });
-  });
 
-  observer.observe(feedContainer, { childList: true, subtree: false });
-  console.log("MutationObserver running...");
+    observer.observe(feedContainer, { childList: true, subtree: false });
+    console.log("MutationObserver running...");
 
-  document.querySelectorAll('a[href*="/status/"]').forEach(link => {
-    const tweetDiv = link.closest('div[style*="position: absolute"][style*="width: 100%"][style*="visibility: visible"]');
-    if (tweetDiv) {
-      highlightTweet(tweetDiv, link);
+    document.querySelectorAll('a[href*="/status/"]').forEach(link => {
+      const tweetDiv = link.closest('div[style*="position: absolute"][style*="width: 100%"][style*="visibility: visible"]');
+      if (tweetDiv) {
+        highlightTweet(tweetDiv, link);
+      }
+    });
+
   }
-});
-
-}
 
   });
-
 }
 

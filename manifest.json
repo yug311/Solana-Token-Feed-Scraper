@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "New Pair Highlighter",
+  "version": "1.0",
+  "description": "Highlights verified tweets with >10k followers posted in the last 5 minutes",
+  "permissions": [
+    "activeTab"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://axiom.trade/pulse"],
+      "js": ["extension.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,14 +1,15 @@
 {
   "manifest_version": 3,
   "name": "New Pair Highlighter",
-  "version": "1.0",
-  "description": "Highlights verified tweets with >10k followers posted in the last 5 minutes",
-  "permissions": [
-    "activeTab"
-  ],
+  "version": "1.4",
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": ["https://www.tiktok.com/*", "https://www.instagram.com/*", "https://www.youtube.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
-      "matches": ["https://axiom.trade/pulse"],
+      "matches": ["https://axiom.trade/pulse*"],
       "js": ["extension.js"],
       "run_at": "document_idle"
     }

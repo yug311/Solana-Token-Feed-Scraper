@@ -10,8 +10,9 @@
   "content_scripts": [
     {
       "matches": ["https://axiom.trade/pulse*"],
-      "js": ["extension.js"],
-      "run_at": "document_idle"
+      "js": ["extra.js", "util.js", "highlight.js", "extension.js"],
+      "run_at": "document_idle",
+      "type": "module"
     }
   ]
 }

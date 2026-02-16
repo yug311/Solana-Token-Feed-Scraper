@@ -43,50 +43,64 @@ if (request.type === "fetchInstagram") {
     const listener = (tabId, changeInfo) => {
       if (tabId === tab.id && changeInfo.status === "complete") {
 
-        chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          func: () => {
-            return new Promise((resolve) => {
-              const observer = new MutationObserver(() => {
-                const timeTag = document.querySelector("time");
-                const twitterMeta = document.querySelector('meta[name="twitter:title"]');
 
-                const datetime = timeTag?.getAttribute("datetime");
+          chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: () => {
+              // Get username from og:url
+              const ogUrlMeta = document.querySelector('meta[property="og:url"]');
+              let username = null;
 
-                let username = null;
-                if (twitterMeta?.content) {
-                  const match = twitterMeta.content.match(/\(@([^)]*)\)/);
-                  if (match) username = match[1];
+              if (ogUrlMeta?.content) {
+                try {
+                  const url = new URL(ogUrlMeta.content);
+                  const parts = url.pathname.split("/").filter(Boolean);
+                  username = parts[0]; // first segment after instagram.com/
+                } catch (e) {
+                  username = null;
                 }
+              }
 
-                if (datetime && username) {
-                  observer.disconnect();
-                  clearTimeout(timeout);
-                  resolve({ datetime, username });
-                }
+              // Get time from <time datetime="...">
+              const timeTag = document.querySelector("time[datetime]");
+              const datetime = timeTag?.getAttribute("datetime") || null;
+
+              if (username && datetime) {
+                return { username, datetime };
+              }
+
+              return null;
+            }
+          }).then((results) => {
+            const data = results[0].result;
+
+            chrome.tabs.remove(tab.id);
+
+            if (!data) {
+              sendResponse({ error: "No data found" });
+            } else {
+              sendResponse({
+                username: data.username,
+                createTime: new Date(data.datetime).getTime()
               });
+            }
+          });
 
-              observer.observe(document.body, { childList: true, subtree: true });
 
-              const timeout = setTimeout(() => {
-                observer.disconnect();
-                resolve(null);
-              }, 10000);
-            });
-          }
-        }).then((results) => {
-          const data = results[0].result;
-          chrome.tabs.remove(tab.id);
+        // chrome.scripting.executeScript({
+        //   target: { tabId: tab.id },
+        //   func: () => {
+        //     return document.documentElement.outerHTML;
+        //   }
+        // }).then((results) => {
+        //   const html = results[0].result;
 
-          if (!data) {
-            sendResponse({ error: "No data found" });
-          } else {
-            sendResponse({
-              createTime: new Date(data.datetime).getTime(),
-              username: data.username
-            });
-          }
-        });
+        //   console.log("PAGE HTML:");
+        //   console.log(html);
+
+        //   chrome.tabs.remove(tab.id);
+        //   sendResponse({ debug: "HTML logged" });
+        // });
 
         chrome.tabs.onUpdated.removeListener(listener);
       }
@@ -97,6 +111,85 @@ if (request.type === "fetchInstagram") {
 
   return true;
 }
+
+// if (request.type === "fetchInstagram") {
+//   chrome.tabs.create({ url: request.url, active: false }, (tab) => {
+//     const listener = (tabId, changeInfo) => {
+//       if (tabId === tab.id && changeInfo.status === "complete") {
+
+//         chrome.scripting.executeScript({
+//           target: { tabId: tab.id },
+//           func: () => {
+
+//                 return new Promise((resolve) => {
+//                   const tryResolve = () => {
+//                     const timeTag = document.querySelector("time");
+//                     const twitterMeta = document.querySelector('meta[name="twitter:title"]');
+
+//                     const datetime = timeTag?.getAttribute("datetime");
+//                     console.log(datetime);
+
+//                     let username = null;
+//                     if (twitterMeta?.content) {
+//                       const match = twitterMeta.content.match(/\(@([^)]*)\)/);
+//                       if (match) username = match[1];
+//                     }
+//                     console.log(username);
+
+//                     if (datetime && username) {
+//                       return { datetime, username };
+//                     }
+
+//                     return null;
+//                   };
+
+//                   // 🔥 CHECK IMMEDIATELY FIRST
+//                   const immediate = tryResolve();
+//                   if (immediate) {
+//                     resolve(immediate);
+//                     return;
+//                   }
+
+//                   const observer = new MutationObserver(() => {
+//                     const result = tryResolve();
+//                     if (result) {
+//                       observer.disconnect();
+//                       clearTimeout(timeout);
+//                       resolve(result);
+//                     }
+//                   });
+
+//               observer.observe(document.body, { childList: true, subtree: true });
+
+//               const timeout = setTimeout(() => {
+//                 observer.disconnect();
+//                 resolve(null);
+//               }, 10000);
+//             });
+//           }
+//         }).then((results) => {
+//           const data = results[0].result;
+//           chrome.tabs.remove(tab.id);
+
+//           if (!data) {
+//             sendResponse({ error: "No data found" });
+//           } else {
+//             sendResponse({
+//               createTime: new Date(data.datetime).getTime(),
+//               username: data.username
+//             });
+//           }
+//         });
+
+//         chrome.tabs.onUpdated.removeListener(listener);
+//       }
+//     };
+
+//     chrome.tabs.onUpdated.addListener(listener);
+//   });
+
+//   return true;
+// }
 
     if (request.type === "fetchYouTube") {
     fetch(request.url)

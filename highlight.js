@@ -62,6 +62,7 @@ async function highlightYouTube(node, youtubeLink) {
       }
 
       const { username, uploadTime, badges, subscriberCount } = response;
+      console.log("YouTube response:", response);
       if (!uploadTime) return;
 
       const highlight = decideHighlight({
@@ -89,6 +90,7 @@ async function highlightTikTok(node, tiktokLink) {
       }
 
       const { createTime, followers, author } = response;
+      console.log("TikTok response:", response);
 
       if (!createTime) return;
 
@@ -122,7 +124,8 @@ async function highlightInstagram(node, instagramLink) {
         return;
       }
 
-      const { username, createTime } = response;
+      const { createTime, username } = response;
+      console.log("Instagram response:", response);
 
       if (!createTime) return;
 

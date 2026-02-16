@@ -14,6 +14,7 @@ window.addEventListener('load', () => {
   runFeedLogic();
 });
 
+
 function observeRouteChanges() {
   let currentPath = window.location.pathname; // Track the current path
 
@@ -67,7 +68,6 @@ function runFeedLogic() {
               const twitterLink = node.querySelector("a[href*='/status/']");
               if (twitterLink) {
                 highlightTweet(node, twitterLink);
-
                 clearInterval(intervalId); // stop polling
               }
               const tiktokLink = node.querySelector("a[href*='tiktok.com/@'][href*='/video/']");

@@ -51,7 +51,6 @@ function tweetMeetsCriteria(tweet) {
   // 3️⃣ Created within last 5 minutes
   const tweetTime = new Date(tweet.createdAt).getTime();
   const now = Date.now();
-  const FIVE_MINUTES = 5 * 60 * 1000;
 
   if (now - tweetTime > FIVE_MINUTES) return false;
 
@@ -79,17 +78,39 @@ function tiktokPassesVerification(data) {
   if (!data) return false;
   if (data.followers <= 10000) return false;
 
+    const createTime = data.createTime;
+    const now = Date.now();
+    const ONE_HOUR = 12 * FIVE_MINUTES;
+    
+    if (now - createTime > ONE_HOUR) return false;
+
   return true;
 }
 
 function instagramPassesVerification(data) {
-  return true; 
+    //created within last 5 minutes
+    //createTime, username
+    if (!data) return false;
+    const createTime = data.createTime;
+    const now = Date.now();
+    const FIFTEEN_MINUTES = 3 * FIVE_MINUTES
+
+    if (now - createTime > FIFTEEN_MINUTES) return false;
+
+    return true;
 }
 
 function youtubePassesVerification(data) {
   if (!data) return false;
-  if (!data.badge) return false;
-  if (data.followers <= 10000) return false;
+  if (!data.badges) return false;
+  if (data.subscriberCount <= 10000) return false;
 
+  //created within last 6 hrs
+    const uploadTime = data.uploadTime;
+    const now = Date.now();
+    const SIX_HOURS = 6 * 60 * 60 * 1000;
+
+    if (now - uploadTime > SIX_HOURS) return false;
+    
   return true;
 }

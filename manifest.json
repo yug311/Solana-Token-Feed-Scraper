@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "New Pair Highlighter",
   "version": "1.4",
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "scripting", "storage"],
   "host_permissions": ["https://www.tiktok.com/*", "https://www.instagram.com/*", "https://www.youtube.com/*"],
   "background": {
     "service_worker": "background.js"
@@ -11,8 +11,7 @@
     {
       "matches": ["https://axiom.trade/pulse*"],
       "js": ["extra.js", "util.js", "highlight.js", "extension.js"],
-      "run_at": "document_idle",
-      "type": "module"
+      "run_at": "document_idle"
     }
   ]
 }

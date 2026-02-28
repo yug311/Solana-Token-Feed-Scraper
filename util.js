@@ -10,8 +10,18 @@ function flattenHandles(handleGroups) {
   return set;
 }
 
-function createTTLCache(ttl = FIVE_MINUTES) {
+
+function createTTLCache(storageKey, ttl = FIVE_MINUTES) {
   const store = new Map();
+
+  chrome.storage.local.get([storageKey], (result) => {
+    if (result[storageKey]) {
+      const now = Date.now();
+      for (const [key, ts] of Object.entries(result[storageKey])) {
+        if (now - ts <= ttl) store.set(key, ts);
+      }
+    }
+  });
 
   function cleanup() {
     const now = Date.now();
@@ -32,9 +42,35 @@ function createTTLCache(ttl = FIVE_MINUTES) {
       const ts = store.get(key);
       if (ts === undefined) return false;
       return (Date.now() - ts <= ttl);
+    },
+
+    serialize() {
+      cleanup();
+      return Object.fromEntries(store.entries());
     }
   };
 }
+
+function persistAllCaches() {
+  chrome.runtime.sendMessage({
+    type: "persistCaches",
+    data: {
+      twitterCache: twitterCache.serialize(),
+      instagramCache: instagramCache.serialize(),
+      youtubeCache: youtubeCache.serialize(),
+      tiktokCache: tiktokCache.serialize()
+    }
+  });
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") {
+    persistAllCaches();
+  }
+});
+
+
+
 
 
 function tweetMeetsCriteria(tweet) {
@@ -52,7 +88,7 @@ function tweetMeetsCriteria(tweet) {
   const tweetTime = new Date(tweet.createdAt).getTime();
   const now = Date.now();
 
-  if (now - tweetTime > FIVE_MINUTES) return false;
+  if (now - tweetTime > TWITTER_MAX_PASSED_TIME) return false;
 
   return true;
 }
@@ -80,9 +116,8 @@ function tiktokPassesVerification(data) {
 
     const createTime = data.createTime;
     const now = Date.now();
-    const ONE_HOUR = 12 * FIVE_MINUTES;
     
-    if (now - createTime > ONE_HOUR) return false;
+    if (now - createTime > TIKTOK_MAX_PASSED_TIME) return false;
 
   return true;
 }
@@ -93,9 +128,8 @@ function instagramPassesVerification(data) {
     if (!data) return false;
     const createTime = data.createTime;
     const now = Date.now();
-    const FIFTEEN_MINUTES = 3 * FIVE_MINUTES
 
-    if (now - createTime > FIFTEEN_MINUTES) return false;
+    if (now - createTime > INSTAGRAM_MAX_PASSED_TIME) return false;
 
     return true;
 }
@@ -108,9 +142,8 @@ function youtubePassesVerification(data) {
   //created within last 6 hrs
     const uploadTime = data.uploadTime;
     const now = Date.now();
-    const SIX_HOURS = 6 * 60 * 60 * 1000;
 
-    if (now - uploadTime > SIX_HOURS) return false;
+    if (now - uploadTime > YOUTUBE_MAX_PASSED_TIME) return false;
     
   return true;
 }

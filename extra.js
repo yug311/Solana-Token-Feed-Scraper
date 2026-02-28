@@ -1,4 +1,18 @@
 const FIVE_MINUTES = 5 * 60 * 1000;
+const FIFTEEN_MINUTES = 15 * 60 * 1000;
+const ONE_HOUR = 60 * 60 * 1000;
+const SIX_HOURS = 6 * 60 * 60 * 1000;
+const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+
+const TIKTOK_CACHE_DURATION = ONE_HOUR; // TikTok data is more volatile, so we cache for 1 hour
+const YOUTUBE_CACHE_DURATION = SIX_HOURS; // YouTube data can also change frequently, so we cache for 1 hour
+const TWITTER_CACHE_DURATION = ONE_HOUR; // Twitter data can change rapidly, so we cache for 1 hour
+const INSTAGRAM_CACHE_DURATION = ONE_HOUR; // Instagram data can also change frequently, so we cache for 1 hour
+
+const TIKTOK_MAX_PASSED_TIME = FIFTEEN_MINUTES;
+const YOUTUBE_MAX_PASSED_TIME = SIX_HOURS;
+const TWITTER_MAX_PASSED_TIME = FIVE_MINUTES;
+const INSTAGRAM_MAX_PASSED_TIME = FIFTEEN_MINUTES;
 
 const InstagramHandles = {
   // Chaotic / Meme-Worthy / Unhinged Brands (these go viral fastest—savage replies, absurdity, roasts, trends)
@@ -73,27 +87,6 @@ const InstagramHandles = {
     "@hellofresh",        // Meal kit trends
 
 
-  ],
-
-  // Luxury / Fashion Brands (hype drops, flex posts, absurd fashion = instant memes)
-  luxury_fashion_brands: [
-    "@chanelofficial",
-    "@louisvuitton",
-    "@gucci",
-    "@dior",
-    "@prada",
-    "@balenciaga",         // King of weird/ugly fashion memes
-    "@versace",
-    "@hermes",
-    "@miu_miu",
-    "@loewe",
-    "@jacquemus",
-    "@skims",              // Kim K empire, body-posi virality
-    "@fashionnova",
-    "@zara",
-    "@h&m",
-    "@vintag",
-    "@supreme"             // Streetwear drops = FOMO memes
   ],
 
   // Other High-Impact / Viral-Prone Categories
@@ -229,6 +222,7 @@ const TikTokHandles = {
     "@daquan",             // Relatable memes
     "@thefatjewish",       // Celebrity roasts and absurdity
   ],  // Major Consumer / Food / Everyday Brands (huge reach, product drops/launches = meme fuel)
+
   major_consumer_brands: [
     "@nike",               // ~300M, sneaker drops, athlete drama
     "@cocacola",           // Iconic, holiday/viral campaigns
@@ -262,30 +256,7 @@ const TikTokHandles = {
     "@benandjerrys",       // Ice cream flavors with social commentary
     "@hellofresh",         // Meal kit trends
   ],  // Luxury / Fashion Brands (hype drops, flex posts, absurd fashion = instant memes)
-  luxury_fashion_brands: [
-    "@chanelofficial",
-    "@louisvuitton",
-    "@gucci",
-    "@dior",
-    "@prada",
-    "@balenciaga",         // King of weird/ugly fashion memes
-    "@versace",
-    "@hermes",
-    "@miumiu",
-    "@loewe",
-    "@jacquemus",
-    "@skims",              // Kim K empire, body-posi virality
-    "@fashionnova",
-    "@zara",
-    "@hm",
-    "@supreme",            // Streetwear drops = FOMO memes
-    "@burberry",
-    "@marcjacobs",
-    "@valentino",
-    "@balmain",
-    "@fentybeauty",
-    "@aritzia",
-  ],  // Other High-Impact / Viral-Prone Categories
+
   others_high_viral: [
     // Science / Space / Tech (mind-blowing visuals, Elon chaos)
     "@nasa",               // Space drops, aliens? memes
@@ -463,31 +434,7 @@ const YouTubeHandles = {
     "@benandjerrys",       // Ice cream recipes, social issues
     "@hellofresh",         // Meal kit cooking demos
   ],
-  // Luxury / Fashion Brands (hype drops, flex posts, absurd fashion = instant memes)
-  luxury_fashion_brands: [
-    "@CHANEL",             // Fashion shows, behind-the-scenes
-    "@LouisVuitton",       // Luxury unboxings, travel
-    "@gucci",              // Creative campaigns, art collabs
-    "@Dior",               // Beauty and fashion tutorials
-    "@Prada",              // Runway highlights
-    "@BALENCIAGA",         // Weird fashion experiments
-    "@Versace",            // Celebrity features
-    "@hermes",             // Luxury craftsmanship
-    "@miumiu",             // Trendy fashion tips
-    "@LOEWE",              // Artistic videos
-    "@jacquemus",          // Minimalist fashion
-    "@SKIMS",              // Bodywear launches
-    "@FashionNova",        // Haul videos
-    "@ZARA",               // Lookbook inspirations
-    "@hm",                 // Affordable fashion hauls
-    "@Supreme",            // Streetwear drops
-    "@Burberry",           // Classic fashion stories
-    "@MarcJacobs",         // Playful designs
-    "@Valentino",          // Red carpet moments
-    "@BalmainParis",       // Bold fashion
-    "@fenty",              // Beauty tutorials
-    "@Aritzia",            // Styling tips
-  ],
+
   // Other High-Impact / Viral-Prone Categories
   others_high_viral: [
     // Science / Space / Tech (mind-blowing visuals, Elon chaos)
@@ -601,257 +548,229 @@ const YouTubeHandles = {
 };
 
 const TwitterHandles = {
-  // Chaotic / Meme-Worthy / Unhinged Brands (viral roasts, absurdity, trends that spark memes and potential memecoins)
+
   chaotic_fun_brands: [
-    "@duolingo",           // Chaotic language app with viral threats and roasts
-    "@nutterbutter",       // Surreal, horror-humor posts
-    "@scrubdaddy",         // Dark humor and music drops
-    "@chipotle",           // Absurd challenges and Gen Z vibes
-    "@sourpatchkids",      // Chaotic sweet/sour energy
-    "@liquiddeath",        // Edgy water brand with death metal memes
-    "@ryanair",            // Savage airline roasts and hostile replies
-    "@wendys",             // Legendary roast battles
-    "@dennysdiner",        // Late-night absurdity
-    "@barkbox",            // Dog chaos and memes
-    "@totinos",            // Ironic gamer memes
-    "@glossier",           // Beauty with meme twists
-    "@sweetgreen",         // Trendy food absurdity
-    "@dominos",            // Pizza collabs and memes
-    "@mcdonalds",          // Viral drops and occasional chaos
-    "@burgerking",         // Roast wars with competitors
-    "@popeyes",            // Chicken sandwich drama
-    "@tacobell",           // Weird late-night food memes
-    "@oreo",               // Playful collaborations
-    "@oldspice",           // Absurd humor
-    "@moonpie",            // Philosophical snack absurdity
-    "@steakumm",           // Existential meat memes
-    "@gushers",            // Nostalgic candy chaos
-    "@poprocks",           // Explosive fun
-    "@drpepper",           // Quirky flavor memes
-    "@memezar",            // Meme aggregator
-    "@epicfunnypage",      // Viral funny content
-    "@fuckjerry",          // Celebrity roasts
-    "@sarcasm_only",       // Sarcastic takes
-    "@daquan",             // Relatable absurdity
-    "@thefatjewish",       // Humorous chaos
-  ],
-  // Major Consumer / Food / Everyday Brands (huge reach, drops/launches spark viral memes and coins)
-  major_consumer_brands: [
-    "@nike",               // Sneaker drops and athlete hype
-    "@cocacola",           // Iconic campaigns
-    "@starbucks",          // Seasonal viral drops
-    "@mcdonalds",          // Viral drops and occasional chaos
-    "@burgerking",         // Roast wars with competitors
-    "@kfc",                // Chicken sandwich drama
-    "@subway",             // Sandwich trends
-    "@pepsi",              // Beverage brand virality
-    "@redbull",            // Extreme sports virality
-    "@monsterenergy",      // Energy drink hype
-    "@netflix",            // Show memes and drops
-    "@disney",             // Entertainment virality
-    "@spotify",            // Music trends and drops
-    "@apple",              // Tech innovations and launches
-    "@samsung",            // Electronics and mobile
-    "@playstation",        // Gaming console updates
-    "@xbox",               // Gaming console updates
-    "@adidas",             // Streetwear and endorsements
-    "@amazon",             // Deals and launches
-    "@google",             // Tech innovations
-    "@microsoft",          // Gaming and updates
-    "@ubereats",           // Delivery memes
-    "@doritos",            // Challenges
-    "@pringles",           // Fun stacking
-    "@gopro",              // Adventure virals
-    "@lego",               // Creative builds
-    "@dove",               // Campaigns
-    "@gymshark",           // Fitness hype
-    "@canva",              // Design trends
-    "@benandjerrys",       // Flavors with commentary
-    "@hellofresh",         // Meal kit trends
-  ],
-  // Luxury / Fashion Brands (hype drops, flex culture, absurd fashion memes)
-  luxury_fashion_brands: [
-    "@chanelofficial",
-    "@louisvuitton",
-    "@gucci",
-    "@dior",
-    "@prada",
-    "@balenciaga",         // Weird fashion meme king
-    "@versace",
-    "@hermes",
-    "@miumiu",
-    "@loewe",
-    "@jacquemus",
-    "@skims",              // Kim K's viral empire
-    "@fashionnova",
-    "@zara",
-    "@hm",
-    "@supreme",            // Streetwear FOMO
-    "@burberry",
-    "@marcjacobs",
-    "@valentino",
-    "@balmain",
-    "@fentybeauty",
-    "@aritzia",
+    "@burgerking",
+    "@chipotle",
+    "@dominos",
+    "@duolingo",
+    "@nutterbutter",
+    "@oreo",
+    "@popeyes",
+    "@ryanair",
+    "@scrubdaddy",
+    "@tacobell",
+    "@totinos",
+    "@wendys",
   ],
 
-  // Other High-Impact / Viral-Prone Categories (science/space/tech, nature, government, misc viral)
-  others_high_viral: [
-    // Science / Space / Tech (mind-blowing visuals, launches, Elon chaos)
-    "@nasa",               // Space discoveries, alien memes
-    "@spacex",             // Rocket launches/fails
-    "@tesla",              // EV innovations, cross-virality
-    "@neildegrassetyson",  // Science explanations
-    // Nature / World / Exploration (stunning visuals, weird animals)
-    "@natgeo",             // Animal fails, disasters
-    "@natgeotravel",
-    "@natgeoanimals",
-    "@bbcearth",
-    "@discovery",
-    // Government / Official / Global (statements, controversies)
-    "@whitehouse",
-    "@potus",
-    "@flotus",
-    "@un",
-    "@who",
-    "@fbi",
-    "@cia",                // Conspiracy bait
-    // Misc Viral Machines (giveaways, high-engagement)
-    "@x",                 // Meta irony (formerly Twitter)
-    "@taylorswift13",      // Drama drops
-    "@mrbeast",            // Massive giveaways
-    "@elonmusk",           // Ultimate viral king
-    "@catturd2",           // Conservative viral memes
-    "@kalesalad",          // Viral videos and trends
+  major_consumer_brands: [
+    "@adidas",
+    "@amazon",
+    "@amd",
+    "@anthropicai",
+    "@apple",
+    "@canva",
+    "@cocacola",
+    "@disney",
+    "@doritos",
+    "@gemini",
+    "@google",
+    "@gymshark",
+    "@hellofresh",
+    "@hp",
+    "@hulu",
+    "@intel",
+    "@ikea",
+    "@kfc",
+    "@lego",
+    "@mcdonalds",
+    "@microsoft",
+    "@nike",
+    "@netflix",
+    "@nvidia",
+    "@openai",
+    "@pepsi",
+    "@playstation",
+    "@redbull",
+    "@samsung",
+    "@spotify",
+    "@spacex",
+    "@subway",
+    "@tesla",
+    "@ubereats",
+    "@xbox",
   ],
-  // Government Officials / Politicians / World Leaders (statements spark chaos/memes)
-  politicians_gov: [
-    "@narendramodi",       // Most-followed active leader
-    "@barackobama",
-    "@realdonaldtrump",
-    "@aoc",                // Viral progressive takes
-    "@kamalaharris",
-    "@whitehouse",
-    "@potus",
-    "@flotus",
-    "@un",
-    "@who",
-    "@emmanuelmacron",
-    "@nayibbukele",
-    "@luizlula",
-    "@gustavopetro",
-    "@guillermolasso",
-    "@nicolasmaduro",
-    "@gabrielboric",
-    "@giorgiameloni",
-    "@michealmartintd",
-    "@10downingstreet",
-    "@gouvernementfr",
-    "@brunolemaire",
-    "@lawrencewongst",
-    "@zarahsultanamp",
-    "@joeBiden",
-    "@amitshah",
-    "@hillaryclinton",
-  ],
-  // Crypto / Solana / Memecoin Related (hype machines for coins)
-  crypto_memecoin: [
-    "@pumpdotfun",
-    "@solana",
-    "@official_bonk_inu",
-    "@binance",
-    "@coinbase",
-    "@bitcoin",
-    "@ethereum",
-    "@cryptocom",
-    "@timothyronaldd",
-    "@vitalikbuterin",
-    "@rogerkver",
-    "@cdixon",
-    "@balajis",
-    "@cryptocurrency",
-    "@bitcoinmagazine",
-    "@cryptomasun",
-    "@colewherld",
-    "@farodbb",
-    "@degenads",
-    "@blknoiz06",          // Ansem, MOG/WIF caller
-    "@larvontrier",        // KeyCat early calls
-    "@artschoolreject",    // PopCat
-    "@poe_eth",            // PEPE, WIF
-    "@thesexoffender",     // PopCat
-  ],
-  // Finance Accounts (market insights, economic news, potential finance-meme crossovers)
+
   finance_accounts: [
-    "@cnbc",
-    "@wsj",
+    "@a16z",
+    "@bankofamerica",
+    "@blackrock",
+    "@charles_schwab",
+    "@citigroup",
+    "@fidelity",
+    "@goldmansachs",
+    "@jpmorgan",
+    "@morganstanley",
+    "@paypal",
+    "@schwab",
+    "@sequoia",
+    "@vanguard_group",
+    "@wellsfargo",
+  ],
+
+  others_high_viral: [
+    "@bbcearth",
+    "@billgates",
+    "@briantracy",
+    "@catturd2",
+    "@cia",
+    "@discovery",
+    "@elonmusk",
+    "@fbi",
+    "@garyvee",
+    "@jeffbezos",
+    "@lexfridman",
+    "@mrbeast",
+    "@nasa",
+    "@natgeo",
+    "@natgeoanimals",
+    "@natgeotravel",
+    "@naval",
+    "@pmarca",
+    "@popsci",
+    "@sama",
+    "@satyanadella",
+    "@sundarpichai",
+    "@taylorswift13",
+    "@tim_cook",
+    "@un",
+    "@who",
+    "@worldandscience",
+    "@x",
+  ],
+
+  politicians_gov: [
+    "@aoc",
+    "@barackobama",
+    "@billclinton",
+    "@borisjohnson",
+    "@berniesanders",
+    "@brunolemaire",
+    "@donaldjtrumpjr",
+    "@emmanuelmacron",
+    "@flotus",
+    "@gabrielboric",
+    "@gavinnewsom",
+    "@giorgiameloni",
+    "@gouvernementfr",
+    "@guillermolasso",
+    "@hillaryclinton",
+    "@joeBiden",
+    "@kamalaharris",
+    "@lawrencewongst",
+    "@luizlula",
+    "@michealmartintd",
+    "@narendramodi",
+    "@nayibbukele",
+    "@nicolasmaduro",
+    "@potus",
+    "@realdonaldtrump",
+    "@speakerpelosi",
+    "@speakerjohnson",
+    "@whitehouse",
+  ],
+
+  crypto_memecoin: [
+    "@a1lon9",
+    "@balajis",
+    "@binance",
+    "@bitcoin",
+    "@bitcoinmagazine",
+    "@blknoiz06",
+    "@coinbase",
+    "@coindesk",
+    "@cointelegraph",
+    "@cryptocom",
+    "@cryptocurrency",
+    "@cz_binance",
+    "@ethereum",
+    "@mert",
+    "@official_bonk_inu",
+    "@pumpdotfun",
+    "@saylor",
+    "@SBF_FTX",
+    "@solana",
+    "@timothyronaldd",
+    "@toly",
+    "@vitalikbuterin",
+    "@worldlibertyfi"
+  ],
+
+  news_outlets: [
+    "@abcnews",
+    "@aljazeera",
+    "@ap",
+    "@axios",
+    "@bbcnews",
+    "@bbcworld",
+    "@bleacherreport",
     "@bloomberg",
-    "@awealthofcs",        // Ben Carlson, evidence-based investing
-    "@morganhousel",       // Psychology of money
-    "@lizannsonders",      // Schwab strategist
-    "@paulkrugman",        // Economist takes
-    "@elerianm",           // Allianz advisor
-    "@aswathdamodaran",    // Valuation expert
-    "@michaelbatnick",     // Market history
-    "@andrewlokenauth",    // Finance education
-    "@brianferoldi",       // Stock analysis
-    "@benzinga",           // Real-time news
-    "@stocktwits",         // Trader community
-    "@breakoutstocks",     // Technical alerts
-    "@bespokeinvest",      // Data insights
-    "@wsjmarkets",         // Market coverage
-    "@deltaone",           // Walter Bloomberg, breaking news
-    "@theeconomist",       // Global finance
-    "@onlycfo",            // CFO perspectives
-  ],
-  // Right-Leaning Libertarian Accounts (edgy takes, liberty memes, anti-establishment virality)
-  libertarian_accounts: [
-    "@libertarianism",     // Core libertarian values
-    "@solibertarian",      // Libertarian realist
-    "@justinamash",        // Libertarian-republican
-    "@lpnational",         // Libertarian Party
-    "@trhlofficial",       // Redheaded libertarian
-    "@ronpaul",            // Liberty icon
-    "@randpaul",           // Senator, libertarian views
-    "@mises",              // Mises Institute
-    "@catoinstitute",      // Policy think tank
-    "@reason",             // Libertarian magazine
-    "@joerogan",           // Libertarian-leaning discussions
-    "@glennbeck",          // Conservative libertarian
-    "@peterthiel",         // Tech libertarian
-    "@balajis",            // Network state visionary
-    "@davidboaz",          // Cato VP
-    "@tomgpalmer",         // Atlas Network
-    "@lpnh",               // NH Libertarian Party (active)
-    "@joejong",            // Tech liberty advocate
-    "@nickgillespie",      // Reason editor
-    "@kmele",              // Fifth Column podcast
-  ],
-  // Highly Viral Accounts (massive reach, trendsetters, meme/coin catalysts)
-  highly_viral_accounts: [
-    "@elonmusk",           // Tech, memes, market moves
-    "@x",                 // Meta-level irony
-    "@sama",               // Sam Altman, AI visionary
-    "@mrbeast",            // Giveaways, challenges
-    "@catturd2",           // Conservative virals
-    "@kalesalad",          // Videos, memes, news
-    "@respectfulmemes",    // Wholesome memes
-    "@worldandscience",    // Science virals
-    "@popsci",             // Pop science
-    "@briantracy",         // Motivational
-    "@garyvee",            // Hustle culture
-    "@timferriss",         // Productivity hacks
-    "@naval",              // Wisdom threads
-    "@lexfridman",         // Deep discussions
-    "@andrewng",           // AI insights
-    "@joepompliano",       // Sports/business cross
-    "@codie_sanchez",      // Business acquisition
-    "@sweatystartup",      // Real estate trolls
-    "@thecoolestcool",     // Marketing tips
-    "@nicheladysite",      // SEO niche sites
-    "@social_savannah",    // TikTok ads
-    "@therahulissar",      // FB ads
+    "@breakoutstocks",
+    "@business",
+    "@businessinsider",
+    "@buzzfeed",
+    "@cbsnews",
+    "@cnbc",
+    "@cnn",
+    "@dailymail",
+    "@deltaone",
+    "@dexerto",
+    "@economist",
+    "@espn",
+    "@financialtimes",
+    "@forbes",
+    "@foxbusiness",
+    "@fortunemagazine",
+    "@foxnews",
+    "@guardian",
+    "@hollywoodreporter",
+    "@investingcom",
+    "@latimes",
+    "@markets",
+    "@mlb",
+    "@msnbc",
+    "@nba",
+    "@nbcnews",
+    "@newsweek",
+    "@nfl",
+    "@nhl",
+    "@npr",
+    "@nytimes",
+    "@politico",
+    "@reuters",
+    "@rollingstone",
+    "@skynews",
+    "@sportscenter",
+    "@stocktwits",
+    "@techcrunch",
+    "@theatlantic",
+    "@thebabylonbee",
+    "@theeconomist",
+    "@thehill",
+    "@theonion",
+    "@thewrap",
+    "@time",
+    "@tradingview",
+    "@usatoday",
+    "@variety",
+    "@verge",
+    "@vice",
+    "@washingtonpost",
+    "@wired",
+    "@wsj",
+    "@wsjmarkets",
+    "@yahoofinance",
+    "@ynewswire",
   ],
 };
-
-

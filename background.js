@@ -2,6 +2,10 @@ console.log("Background worker loaded");
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
+    if (request.type === "persistCaches") {
+    chrome.storage.local.set(request.data);
+  }
+
 if (request.type === "fetchTikTok") {
   fetch(request.url)
     .then(res => res.text())

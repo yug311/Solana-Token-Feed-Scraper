@@ -1,14 +1,14 @@
-/*Multiple links, links in tweets, instagram stories*/
+/*Multiple links, links in tweets, instagram stories, fix accounts*/
 
 const instagramPriority = flattenHandles(InstagramHandles);
 const twitterPriority = flattenHandles(TwitterHandles);
 const tiktokPriority = flattenHandles(TikTokHandles);
 const youtubePriority = flattenHandles(YouTubeHandles);
 
-const twitterCache = createTTLCache();
-const instagramCache = createTTLCache();
-const youtubeCache = createTTLCache();
-const tiktokCache = createTTLCache();
+const twitterCache = createTTLCache("twitterCache", TWITTER_CACHE_DURATION);
+const instagramCache = createTTLCache("instagramCache", INSTAGRAM_CACHE_DURATION);
+const youtubeCache = createTTLCache("youtubeCache", YOUTUBE_CACHE_DURATION);
+const tiktokCache = createTTLCache("tiktokCache", TIKTOK_CACHE_DURATION);
 
 window.addEventListener('load', () => {
   runFeedLogic();

@@ -4,16 +4,18 @@ function decideHighlight({
   passesVerification,
   prioritySet,
   cache,
-  id
+  id,
+  max_time
 }) {
   const now = Date.now();
   const createdTime = new Date(createdAt).getTime();
 
-  const isRecent = (now - createdTime) <= FIVE_MINUTES;
+  const isRecent = (now - createdTime) <= max_time;
   if (!isRecent) return null;
 
   const isPriority = prioritySet.has("@" + username.toLowerCase());
   const isCached = cache.wasRecentlySeen(id);
+  // console.log("Deciding highlight: ", id);
 
   if (isPriority) {
     if (isCached) return "blue";
@@ -30,6 +32,8 @@ function decideHighlight({
 
 function applyHighlight(node, color, id, createdAt, cache) {
   if (!color) return;
+
+  // console.log(`Applying highlight to ${id}`);
 
   if (color === "gold") {
     node.style.border = "2px solid gold";
@@ -62,8 +66,10 @@ async function highlightYouTube(node, youtubeLink) {
       }
 
       const { username, uploadTime, badges, subscriberCount } = response;
-      console.log("YouTube response:", response);
+      // console.log("YouTube response:", response);
       if (!uploadTime) return;
+
+      // youtubeCache.debug();
 
       const highlight = decideHighlight({
         username,
@@ -71,10 +77,15 @@ async function highlightYouTube(node, youtubeLink) {
         passesVerification: youtubePassesVerification(response),
         prioritySet: youtubePriority,
         cache: youtubeCache,
-        id: youtubeLink.href
+        id: youtubeLink.href,
+        max_time: YOUTUBE_MAX_PASSED_TIME
       });
 
+      // console.log("2: ", highlight);
+
       applyHighlight(node, highlight, youtubeLink.href, uploadTime, youtubeCache);
+
+      // youtubeCache.debug();
     }
   );
 
@@ -90,20 +101,27 @@ async function highlightTikTok(node, tiktokLink) {
       }
 
       const { createTime, followers, author } = response;
-      console.log("TikTok response:", response);
+      // console.log("TikTok response:", response);
 
       if (!createTime) return;
 
+
+      // tiktokCache.debug();
       const highlight = decideHighlight({
         username: author,
         createdAt: createTime,
         passesVerification: tiktokPassesVerification(response),
         prioritySet: tiktokPriority,
         cache: tiktokCache,
-        id: tiktokLink.href
+        id: tiktokLink.href,
+        max_time: TIKTOK_MAX_PASSED_TIME
       });
 
+        // console.log("2: ", highlight);
+
       applyHighlight(node, highlight, tiktokLink.href, createTime, tiktokCache);
+
+      // tiktokCache.debug();
   
     }
   );
@@ -125,9 +143,11 @@ async function highlightInstagram(node, instagramLink) {
       }
 
       const { createTime, username } = response;
-      console.log("Instagram response:", response);
+      // console.log("Instagram response:", response);
 
       if (!createTime) return;
+
+      // instagramCache.debug();
 
       const highlight = decideHighlight({
         username,
@@ -135,10 +155,15 @@ async function highlightInstagram(node, instagramLink) {
         passesVerification: instagramPassesVerification(response),
         prioritySet: instagramPriority,
         cache: instagramCache,
-        id: instagramLink.href
+        id: instagramLink.href,
+        max_time: INSTAGRAM_MAX_PASSED_TIME
       });
 
+      // console.log("2: ", highlight);
+
       applyHighlight(node, highlight, instagramLink.href, createTime, instagramCache);
+
+      // instagramCache.debug();
     }
   );
 
@@ -157,16 +182,22 @@ function highlightTweet(node, twitterLink) {
         const data = JSON.parse(xhr.responseText);
 
 
+        // twitterCache.debug();
         const highlight = decideHighlight({
           username: data.userInfo?.userName,
           createdAt: data.createdAt,
           passesVerification: shouldHighlightTweet(data),
           prioritySet: twitterPriority,
           cache: twitterCache,
-          id: tweetId
+          id: tweetId,
+          max_time: TWITTER_MAX_PASSED_TIME
         });
 
+        // console.log("2: ", highlight);
+
         applyHighlight(node, highlight, tweetId, data.createdAt, twitterCache);
+
+        // twitterCache.debug();
         }
     }
     };

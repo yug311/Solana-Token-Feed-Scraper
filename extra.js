@@ -42,14 +42,6 @@ const InstagramHandles = {
     "@gushers",           // Fun, nostalgic candy chaos
     "@poprocks",          // Explosive, fun content
     "@drpepper",          // Quirky flavor drops
-    "@memezar",           // Pure meme aggregator, viral potential
-    "@epicfunnypage",     // Funny videos and memes
-    "@fuckjerry",         // Classic meme page
-    "@sarcasm_only",      // Sarcastic humor
-    "@daquan",            // Relatable memes
-    "@thefatjewish",      // Celebrity roasts and absurdity
-
-
   ],
 
   // Major Consumer / Food / Everyday Brands (huge reach, product drops/launches = meme fuel)
@@ -83,10 +75,8 @@ const InstagramHandles = {
     "@dove",              // Body positivity campaigns
     "@gymshark",          // Fitness hype
     "@canva",             // Design tools, user creations
-    "@benandjerrys",      // Ice cream flavors with social commentary
-    "@hellofresh",        // Meal kit trends
-
-
+    "@openai",
+    "@claudeai",             // AI-generated art and memes
   ],
 
   // Other High-Impact / Viral-Prone Categories
@@ -95,16 +85,11 @@ const InstagramHandles = {
     "@nasa",               // Space drops, aliens? memes
     "@spacex",             // Rocket fails/launches = viral gold
     "@tesla",              // Elon posts cross-post virality
-    "@elonmusk",           // If he has IG—pure chaos potential (or related)
-    
-    // Nature / World / Exploration (stunning + weird = shareable)
     "@natgeo",             // ~280M, animal fails, disasters
     "@natgeotravel",
     "@natgeoanimals",
     "@bbcearth",
     "@discovery",
-    
-    // Government / Official / Global (statements, announcements = controversy/memes)
     "@whitehouse",
     "@potus",
     "@flotus",
@@ -113,11 +98,12 @@ const InstagramHandles = {
     "@nasa",                // Overlap but gov-adjacent
     "@fbi",
     "@cia",                 // Conspiracy bait
-    
-    // Misc Viral Machines (MrBeast empire, random high-engagement)
     "@instagram",          // Meta-level irony
     "@taylorswift",        // Drama drops
-    "@mrbeast"             // Giveaways = community hype
+    "@mrbeast",             // Giveaways = community hype
+    "@tmz",                 // Celebrity gossip and drama
+    "@hollywoodreporter",   // Entertainment news and celebrity updates
+    "@people",              // Celebrity news and human interest stories
   ],
 
     // Government Officials / Politicians / World Leaders (statements = chaos)
@@ -176,8 +162,6 @@ const InstagramHandles = {
     "@citigroup",          // Citi: Consumer banking, global finance
     "@bankofamerica",      // Bank of America: Personal finance tips
     "@wellsfargo",         // Wells Fargo: Banking services
-
-    // Stock Exchanges / Regulatory (listings, regulations = viral events)
     "@nyse",               // New York Stock Exchange: Bell rings, IPOs
     "@nasdaq",             // Nasdaq: Tech stocks, market opens
     "@secgov",             // SEC: Investor protection, crypto regs
@@ -253,12 +237,9 @@ const TikTokHandles = {
     "@dove",               // Body positivity campaigns
     "@gymshark",           // Fitness hype
     "@canva",              // Design tools, user creations
-    "@benandjerrys",       // Ice cream flavors with social commentary
-    "@hellofresh",         // Meal kit trends
-  ],  // Luxury / Fashion Brands (hype drops, flex posts, absurd fashion = instant memes)
+  ],
 
   others_high_viral: [
-    // Science / Space / Tech (mind-blowing visuals, Elon chaos)
     "@nasa",               // Space drops, aliens? memes
     "@spacex",             // Rocket fails/launches = viral gold
     "@tesla",              // Elon posts cross-post virality
@@ -268,8 +249,6 @@ const TikTokHandles = {
     "@natgeoanimals",
     "@bbcearth",
     "@discovery",
-
-    // Government / Official / Global (statements, announcements = controversy/memes)
     "@whitehouse",
     "@potus",
     "@flotus",
@@ -278,8 +257,6 @@ const TikTokHandles = {
     "@nasa",                // Overlap but gov-adjacent
     "@fbi",
     "@cia",                 // Conspiracy bait
-
-    // Misc Viral Machines (MrBeast empire, random high-engagement)
     "@instagram",          // Meta-level irony
     "@taylorswift",        // Drama drops
     "@mrbeast"             // Giveaways = community hype  ],  // Government Officials / Politicians / World Leaders (statements = chaos)
@@ -433,6 +410,7 @@ const YouTubeHandles = {
     "@canva",              // Design tutorials
     "@benandjerrys",       // Ice cream recipes, social issues
     "@hellofresh",         // Meal kit cooking demos
+    "@openai",              // AI demos, art generation
   ],
 
   // Other High-Impact / Viral-Prone Categories
@@ -747,6 +725,7 @@ const TwitterHandles = {
     "@nhl",
     "@npr",
     "@nytimes",
+    "@people",
     "@politico",
     "@reuters",
     "@rollingstone",
@@ -762,6 +741,7 @@ const TwitterHandles = {
     "@thewrap",
     "@time",
     "@tradingview",
+    "@tmz",
     "@usatoday",
     "@variety",
     "@verge",
